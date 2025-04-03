@@ -1,4 +1,4 @@
-import { settings, select, classNames, templates } from './settings.js';
+import { select, classNames } from './settings.js';
 
 const app = {
     initPages: function () {
@@ -50,4 +50,24 @@ const app = {
             link.classList.toggle(classNames.nav.active, link.getAttribute('href') == '#' + pageId);
         }
     },
+
+    initHome: function () {
+        // inicjalizacja klasy home
+    },
+
+    init: function() {
+        const thisApp = this;
+  
+        console.log('*** App starting ***');
+        // console.log('thisApp:', thisApp);
+        // console.log('classNames:', classNames);
+        // console.log('settings:', settings);
+        // console.log('templates:', templates);
+      
+        thisApp.initPages();
+        thisApp.initHome(); 
+
+      },
 }
+
+app.init();
