@@ -10,37 +10,47 @@
     <link href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flickity/2.3.0/flickity.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flickity/2.3.0/flickity.pkgd.min.js"></script>
-    <link rel="stylesheet" href="./vendor/range-slider.min.css">
+    <link rel="stylesheet" href="libs/green-audio-player/css/green-audio-player.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
     <!-- ostylować nawigację i zrobić handlebars - 1. schować sekcje, home ma być aktywna od razu, 2. zrobić handlebars -->
     <header class="header">
-        <div class="container">
-            <div class="main-nav">
-                <a href="#home">Home</a>
-                <a href="#search">Search</a>
-                <a href="#discover">Discover</a>
-              </div>
+      <div class="container">
+        <div class="main-nav">
+          <a href="#home">Home</a>
+          <a href="#search">Search</a>
+          <a href="#discover">Discover</a>
         </div>
+      </div>
     </header>
     <div id="pages">
-        <section id="home">
-          <div class="home-wrapper">home</div>
-        </section>
-        <section id="search">
-          <div class="search-wrapper container">search</div>
-        </section>
-        <section id="discover">
-          <div class="discover-wrapper container">discover</div>
-        </section>
-      </div>
+      <section id="home">
+        <div class="home-wrapper">
+          <div class="players">
+            <div class="player">
+              <audio>
+                <source src="songs/At_The_Top_David_Renda.mp3" type="audio/mpeg">
+              </audio>
+            </div>
+          </div>
+          home
+        </div>
+      </section>
+      <section id="search">
+        <div class="search-wrapper container">search</div>
+      </section>
+      <section id="discover">
+        <div class="discover-wrapper container">discover</div>
+      </section>
+    </div>
 
-      <!-- dodać template'y stron -->
-      <script id="template-home" type="text/x-handlebars-template"></script>
+    <!-- dodać template'y stron -->
+    <script id="template-home" type="text/x-handlebars-template"></script>
 
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.0/handlebars.min.js"></script>
-      <script src="js/app.js" type="module"></script>
-</body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.0/handlebars.min.js"></script>
+    <script src="libs/green-audio-player/js/green-audio-player.min.js"></script>
+    <script src="js/app.js" type="module"></script>
+  </body>
 </html>

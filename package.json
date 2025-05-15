@@ -15,7 +15,7 @@
         "test:scss": "stylelint --fix src/sass/",
         "build": "npm-run-all build:* test",
         "build:clean": "rimraf dist && mkdirp dist",
-        "build:copy": "copyfiles -a -u 1 -e \"**/sass/**/*\" -e \"**/.gitkeep\" \"src/**/*\" dist",
+        "build:copy": "copyfiles -a -u 1 -e \"**/sass/**/*\" -e \"**/.gitkeep\" \"src/**/*\" \"public/**/*\"  dist",
         "build:sass": "sass --style=compressed --no-source-map src/sass:dist/css",
         "build:autoprefixer": "postcss dist/css/*.css --use autoprefixer -d dist/css",
         "build-dev": "npm-run-all build-dev:sass build:autoprefixer",
@@ -24,7 +24,7 @@
         "watch": "npm-run-all build build-dev -p watch:* server",
         "watch:browsersync": "browser-sync start --server dist --files \"dist/**/*\" --ignore \"dist/db/**/*\"",
         "watch:sassprefixer": "onchange \"src/sass/**/*.scss\" -- npm run build-dev",
-        "watch:copy": "onchange -e \"**/sass/**/*\" -e \"**/.gitkeep\" \"src/**/*\" -- copyfiles -a -u 1 {{changed}} dist"
+        "watch:copy": "onchange -e \"**/sass/**/*\" -e \"**/.gitkeep\" \"src/**/*\"  \"public/**/*\" -- copyfiles -a -u 1 {{changed}} dist"
     },
     "keywords": [],
     "author": "",

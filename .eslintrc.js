@@ -23,6 +23,7 @@ module.exports = {
         ]
     },
     "globals": {
-      "Handlebars": false
+      "Handlebars": false,
+      "GreenAudioPlayer": false
     }
 }

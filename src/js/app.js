@@ -1,5 +1,49 @@
 import { select, classNames } from './settings.js';
 
+class SongsList {
+    constructor() {
+        this.fetchSongs().then(() => {
+            this.initList(); 
+        }); 
+    }
+
+    fetchSongs() {
+        return fetch('/db/app.json')
+            .then(res => {
+                return res.json(); 
+            })
+            .then(data => {
+                this.songs = data.songs;
+            })
+    }
+
+    initList() {
+        console.log(this.songs);
+        for (let song of this.songs) {
+            new SongPlayer(song);
+        }
+    }
+
+    // here song search
+}
+
+class RandomSong {
+    //
+}
+
+class service FetchSong // create class service // dependency injection
+/* poczytać o dependency injection - piwnica prog.  */
+
+class SongPlayer {
+    constructor(song) {
+        console.log('song', song);
+    }
+
+    // create handlebars templace
+    // call method greenAudioPlayer
+}
+
+
 const app = {
     initPages: function () {
         const thisApp = this;
@@ -17,7 +61,6 @@ const app = {
                 break;
             }
         }
-
         thisApp.activatePage(thisApp.pages[0].id);
 
         for (let link of thisApp.navLinks) {
@@ -55,6 +98,14 @@ const app = {
         // inicjalizacja klasy home
     },
 
+    // initPlayer: function () {
+    //     const players = document.querySelectorAll('.players .player');
+
+    //     for (let player of players) {
+    //         new GreenAudioPlayer(player);
+    //     }
+    // },
+
     init: function() {
         const thisApp = this;
   
@@ -66,6 +117,9 @@ const app = {
       
         thisApp.initPages();
         thisApp.initHome(); 
+        // thisApp.initPlayer(); 
+        
+        new SongsList(); 
 
       },
 }
