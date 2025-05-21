@@ -1,26 +1,23 @@
 import { select, classNames } from './settings.js';
 
 class SongsList {
-    constructor() {
-        this.fetchSongs().then(() => {
+    constructor(dataService) {
+        this.dataService = dataService;
+        this.renderDOM();
+        dataService.fetchSongs().then(() => {
             this.initList(); 
         }); 
     }
 
-    fetchSongs() {
-        return fetch('/db/app.json')
-            .then(res => {
-                return res.json(); 
-            })
-            .then(data => {
-                this.songs = data.songs;
-            })
+    renderDOM() {
+        this.container = document.createElement('div');
+        document.body.appendChild(this.container);
     }
 
     initList() {
         console.log(this.songs);
-        for (let song of this.songs) {
-            new SongPlayer(song);
+        for (let song of this.dataService.songs) {
+            new SongPlayer(song, this.container);
         }
     }
 
@@ -31,18 +28,52 @@ class RandomSong {
     //
 }
 
-class service FetchSong // create class service // dependency injection
+//class service FetchSong // create class service // dependency injection
 /* poczytać o dependency injection - piwnica prog.  */
 
 class SongPlayer {
-    constructor(song) {
+    constructor(song, container) {
         console.log('song', song);
+        this.song = song; 
+        this.container = container;
+        this.initSong();
     }
 
-    // create handlebars templace
-    // call method greenAudioPlayer
+    initSong() {
+        this.playerWrapper = document.createElement('div');
+        this.playerWrapper.classList.add('player');
+        const audioElement = document.createElement('audio');
+        this.playerWrapper.appendChild(audioElement);
+        const source = document.createElement('source');
+        source.src = `songs/${this.song.filename}`;
+        source.type = `audio/mpeg`;
+        audioElement.appendChild(source);
+        this.container.appendChild(this.playerWrapper);
+        new GreenAudioPlayer(this.playerWrapper);
+    }
+    createAudioElement() {
+        
+    }
+    createSourceForAudio() {
+
+    }
 }
 
+class DataService { // search could be here but class has to be called from SongsList
+    constructor() {
+
+    }
+       
+    fetchSongs() {
+        return fetch('/db/app.json')
+            .then(res => {
+                return res.json(); 
+            })
+            .then(data => {
+                this.songs = data.songs;
+            })
+    }
+}
 
 const app = {
     initPages: function () {
@@ -117,9 +148,9 @@ const app = {
       
         thisApp.initPages();
         thisApp.initHome(); 
-        // thisApp.initPlayer(); 
-        
-        new SongsList(); 
+        //thisApp.initPlayer(); 
+        const dataService = new DataService(); 
+        new SongsList(dataService);
 
       },
 }
