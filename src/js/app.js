@@ -16,16 +16,38 @@ class SongsList {
 
     initList() {
         console.log(this.songs);
-        for (let song of this.dataService.songs) {
-            new SongPlayer(song, this.container);
+        this.songs = this.dataService.songs;
+        for (let song of this.songs) {
+            SongFactory.create(song, this.container);
         }
     }
 
     // here song search
 }
 
+class SongFactory {
+    static create(song, container) {
+        if (song.type === 'random') {
+            return new RandomSong(song, container);
+        } else {
+            return new SongPlayer(song, container);
+        }
+    }
+}
+
 class RandomSong {
-    //
+    constructor(song, container) {
+        this.song = song;
+        this.container = container;
+        this.init();
+        //this.renderDOM();
+    }
+
+    init() {
+        const message = document.createElement('p');
+        message.innerText = `🎲 Random pick: ${this.song.title}`;
+        this.container.appendChild(message);
+    }
 }
 
 //class service FetchSong // create class service // dependency injection
