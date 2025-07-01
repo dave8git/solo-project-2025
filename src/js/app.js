@@ -24,6 +24,14 @@ class SongsList {
     // here song search
 }
 
+
+// --- Zrobić klasę dla audio factory player --- // 
+// CHatGPT: co to jest fabryka, i podaj przykłady (js)
+
+class FactoryPlayers {
+
+}
+
 class RandomSong {
     //
 }
