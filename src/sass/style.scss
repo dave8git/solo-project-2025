@@ -3,18 +3,20 @@
 }
 .header {
     padding: 40px 0 64px 0; /* Assuming $base-size = 8px */
+    margin-bottom: 40px;
     background: #222;       /* Example for $color-dark */
     color: #fff;            /* Example for $color-light */
     position: relative;
   }
   
   .main-nav {
-    position: absolute;
-    bottom: -64px;
     display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-start;
+    // flex-direction: row;
+    // justify-content: center;
+    // align-items: flex-start;
+    width: 277px;
+    margin: 0 auto;
+    padding-top: 50px;
   }
   
   .main-nav a {
@@ -31,4 +33,9 @@
   
   .main-nav a.active {
     background: #eee;
+  }
+
+  .song-list {
+    margin: 0 auto;
+    width: 356px;
   }

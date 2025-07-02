@@ -1,22 +1,30 @@
 import { select, classNames } from './settings.js';
 
 class SongsList {
-    constructor(dataService) {
+    constructor(dataService, isRandomMode = false) {
         this.dataService = dataService;
+        this.isRandomMode = isRandomMode; // Fixed: was assigning to itself
         console.log('!', this.dataService);
         this.renderDOM();
         this.dataService.fetchSongs().then((songs) => {
-            this.initList(songs); 
+            if (this.isRandomMode) {
+                const randomSong = Randomizer.getRandom(songs);
+                this.initList([randomSong]);
+            } else {
+                this.initList(songs); 
+            }
         }); 
     }
 
     renderDOM() {
         this.container = document.createElement('div');
+        this.container.classList.add('song-list');
         document.body.appendChild(this.container);
     }
 
     initList(songs) {
         console.log(songs, this.container);
+        this.container.innerHTML = '';
         for (let song of songs) {
             new SongPlayer(this.container, song);
         }
@@ -102,6 +110,8 @@ class DataService { // search could be here but class has to be called from Song
 }
 
 const app = {
+    currentSongsList: null, // Added: missing property
+
     initPages: function () {
         const thisApp = this;
 
@@ -126,6 +136,12 @@ const app = {
                 event.preventDefault();
                 /* get page id from href attribute */
                 const id = clickedElement.getAttribute('href').replace('#', '');
+                
+                // Added: check for discover page
+                if (id === 'discover') {
+                    thisApp.initDiscoverPage();
+                }
+                
                 /* run thisApp.activatePage with that id */
                 thisApp.activatePage(id);
                 /* channge URL hash */
@@ -155,6 +171,15 @@ const app = {
         // inicjalizacja klasy home
     },
 
+    initDiscoverPage: function () {
+        const thisApp = this;
+        if (thisApp.currentSongsList && thisApp.currentSongsList.container) {
+            thisApp.currentSongsList.container.remove();
+        }
+        const dataService = new DataService();
+        thisApp.currentSongsList = new SongsList(dataService, true); // Fixed: now passes true for random mode
+        
+    },
     // initPlayer: function () {
     //     const players = document.querySelectorAll('.players .player');
 
@@ -176,9 +201,8 @@ const app = {
         thisApp.initHome(); 
         //thisApp.initPlayer(); 
         const dataService = new DataService(); 
-        new SongsList(dataService);
-
-      },
+        thisApp.currentSongsList = new SongsList(dataService); // Fixed: store reference
+    },
 }
 
 app.init();
