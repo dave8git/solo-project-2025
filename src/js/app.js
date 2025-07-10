@@ -6,14 +6,13 @@ class SongsList {
         this.isRandomMode = isRandomMode;
         console.log('!', this.dataService);
         this.renderDOM();
-        this.dataService.fetchSongs().then((songs) => {
+        const songs = this.dataService.data;
             if (this.isRandomMode) {
                 const randomSong = Randomizer.getRandom(songs);
                 this.initList([randomSong]);
             } else {
                 this.initList(songs); 
             }
-        }); 
     }
     renderDOM() {
         this.container = document.createElement('div');
@@ -88,7 +87,8 @@ class DataService {
             })
             .then(data => {
                 
-                return data.songs;
+                //return data.songs;
+                this.data = data.songs;
             })
     }
 }
@@ -119,8 +119,11 @@ const app = {
                 const clickedElement = this;
                 event.preventDefault();
                 const id = clickedElement.getAttribute('href').replace('#', '');
+                console.log('id', id);
                 if (id === 'discover') {
                     thisApp.initDiscoverPage();
+                } else if (id === 'home') {
+                    thisApp.initHomePage();
                 }
                 thisApp.activatePage(id);
                 window.location.hash = '#/' + id;
@@ -141,12 +144,20 @@ const app = {
     initHome: function () {
     },
 
+    initHomePage: function () {
+        const thisApp = this;
+        if (thisApp.currentSongsList && thisApp.currentSongsList.container) {
+            thisApp.currentSongsList.container.remove();
+        }
+        thisApp.currentSongsList = new SongsList(dataService);
+    },
+
     initDiscoverPage: function () {
         const thisApp = this;
         if (thisApp.currentSongsList && thisApp.currentSongsList.container) {
             thisApp.currentSongsList.container.remove();
         }
-        const dataService = new DataService();
+        
         thisApp.currentSongsList = new SongsList(dataService, true);
     },
 
@@ -162,9 +173,11 @@ const app = {
         thisApp.initPages();
         thisApp.initHome(); 
         //thisApp.initPlayer(); 
-        const dataService = new DataService(); 
         thisApp.currentSongsList = new SongsList(dataService);
     },
 }
 
-app.init();
+const dataService = new DataService(); 
+dataService.fetchSongs().then(() => {
+    app.init();
+});
