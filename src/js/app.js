@@ -4,7 +4,6 @@ class SongsList {
     constructor(dataService, isRandomMode = false) {
         this.dataService = dataService;
         this.isRandomMode = isRandomMode;
-        console.log('!', this.dataService);
         this.renderDOM();
         const songs = this.dataService.data;
             if (this.isRandomMode) {
@@ -20,7 +19,6 @@ class SongsList {
         document.body.appendChild(this.container);
     }
     initList(songs) {
-        console.log(songs, this.container);
         this.container.innerHTML = '';
 
         if(!songs || songs.length === 0) {
@@ -41,12 +39,9 @@ class SongsList {
             </div>
         `;
         this.container.innerHTML = noResultsHTML;
-
     }
 }
-class FactoryPlayers {
 
-}
 class Randomizer {  
   static getRandom(data = []) {
     const randomId = Math.floor((Math.random() * data.length));    
@@ -78,13 +73,9 @@ class SongPlayerFactory {
         return source;
     }
 }
-//class service FetchSong // create class service // dependency injection
-/* poczytać o dependency injection - piwnica prog.  */
+
 class SongPlayer {
     constructor(container, song) {
-        console.log('song', song);
-        //this.song = song; 
-        //this.container = container;
         this.initSong(container, song);
     }
 
@@ -97,7 +88,6 @@ class SongPlayer {
 class SearchService {
     constructor(dataService) {
         this.dataService = dataService;
-        console.log('search service running')
     }
 
     searchSongs(query, searchBy = 'all') {
@@ -115,7 +105,7 @@ class SearchService {
                 case 'author':
                     return song.author.toString().includes(searchQuery);
                 case 'categories':
-                    return song.categories.some(category => category.toLowerCase().includes());
+                    return song.categories.some(category => category.toLowerCase().includes(searchQuery));
                 case 'ranking':
                     return song.ranking.toString().includes(searchQuery);
                 default: 
@@ -137,8 +127,6 @@ class DataService {
                 return res.json(); 
             })
             .then(data => {
-                
-                //return data.songs;
                 this.data = data.songs;
             })
     }
@@ -169,7 +157,6 @@ const app = {
 
         let pageMatchingHash = thisApp.pages[0].id;
         const idFromHash = window.location.hash;
-        console.log(pageMatchingHash);
         for (let page of thisApp.pages) {
             if (page.id == idFromHash) {
                 pageMatchingHash = page.id;
@@ -183,8 +170,6 @@ const app = {
                 const clickedElement = this;
                 event.preventDefault();
                 const id = clickedElement.getAttribute('href').replace('#', '');
-                console.log('id', id);
-
                 thisApp.cleanup();
 
                 switch(id) {
@@ -236,7 +221,7 @@ const app = {
                 <input id="search-input" type="text" placeholder="Search by title, author, category, or ranking." class="search-input">
                 <select id="search-filter" class="search-filter">
                     <option value="all">All</option>
-                    <option value="title>Title</option>
+                    <option value="title">Title</option>
                     <option value="author">Author</option>
                     <option value="categories">Categories</option>
                     <option value="ranking">Ranking</option>
