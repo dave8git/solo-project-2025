@@ -22,9 +22,26 @@ class SongsList {
     initList(songs) {
         console.log(songs, this.container);
         this.container.innerHTML = '';
+
+        if(!songs || songs.length === 0) {
+            this.showNoResults();
+            return;
+        }
+
         for (let song of songs) {
             new SongPlayer(this.container, song);
         }
+    }
+
+    showNoResults() {
+        const noResultsHTML = `
+            <div class="no-results">
+                <h3>No songs found</h3>
+                <p>Try adjusting your search terms or filters</p>
+            </div>
+        `;
+        this.container.innerHTML = noResultsHTML;
+
     }
 }
 class FactoryPlayers {
@@ -76,6 +93,40 @@ class SongPlayer {
         new GreenAudioPlayer(player);
     }
 }
+
+class SearchService {
+    constructor(dataService) {
+        this.dataService = dataService;
+        console.log('search service running')
+    }
+
+    searchSongs(query, searchBy = 'all') {
+        const songs = this.dataService.data;
+        if(!query || query.trim() === '') {
+            return songs;
+        }
+
+        const searchQuery = query.toLowerCase().trim();
+
+        return songs.filter(song => {
+            switch(searchBy) {
+                case 'title': 
+                    return song.title.toLowerCase().includes(searchQuery);
+                case 'author':
+                    return song.author.toString().includes(searchQuery);
+                case 'categories':
+                    return song.categories.some(category => category.toLowerCase().includes());
+                case 'ranking':
+                    return song.ranking.toString().includes(searchQuery);
+                default: 
+                    return song.title.toLowerCase().includes(searchQuery) ||
+                           song.author.toString().includes(searchQuery) ||
+                           song.categories.some(category => category.toLowerCase().includes(searchQuery)) ||
+                           song.ranking.toString().includes(searchQuery)
+            }
+        })
+    }
+}
 class DataService {
     constructor() {
     }
@@ -95,7 +146,20 @@ class DataService {
 
 const app = {
     currentSongsList: null,
+    searchContainer: null,
 
+    cleanup: function() {
+        const thisApp = this;
+
+        if(thisApp.currentSongsList?.container) {
+            thisApp.currentSongsList.container.remove();
+            thisApp.currentSongsList = null;
+        }
+        if (thisApp.searchContainer) {
+            thisApp.searchContainer.remove();
+            thisApp.searchContainer = null; 
+        }
+    },
     initPages: function () {
         const thisApp = this;
 
@@ -120,10 +184,19 @@ const app = {
                 event.preventDefault();
                 const id = clickedElement.getAttribute('href').replace('#', '');
                 console.log('id', id);
-                if (id === 'discover') {
-                    thisApp.initDiscoverPage();
-                } else if (id === 'home') {
-                    thisApp.initHomePage();
+
+                thisApp.cleanup();
+
+                switch(id) {
+                    case 'discover':
+                        thisApp.initDiscoverPage();
+                        break;
+                    case 'home':
+                        thisApp.initHomePage();
+                        break;
+                    case 'search':
+                        thisApp.initSearchPage();
+                        break;
                 }
                 thisApp.activatePage(id);
                 window.location.hash = '#/' + id;
@@ -141,24 +214,81 @@ const app = {
         }
     },
 
-    initHome: function () {
-    },
-
     initHomePage: function () {
         const thisApp = this;
-        if (thisApp.currentSongsList && thisApp.currentSongsList.container) {
-            thisApp.currentSongsList.container.remove();
-        }
         thisApp.currentSongsList = new SongsList(dataService);
     },
 
     initDiscoverPage: function () {
         const thisApp = this;
-        if (thisApp.currentSongsList && thisApp.currentSongsList.container) {
-            thisApp.currentSongsList.container.remove();
-        }
-        
         thisApp.currentSongsList = new SongsList(dataService, true);
+    },
+
+    initSearchPage: function () {
+        const thisApp = this;
+        thisApp.searchContainer = '';
+        thisApp.searchHTML = '';
+        thisApp.searchContainer = document.createElement('div');
+        thisApp.searchContainer.classList.add('search-container');
+
+        thisApp.searchHTML = `
+            <div class="search-controls">
+                <input id="search-input" type="text" placeholder="Search by title, author, category, or ranking." class="search-input">
+                <select id="search-filter" class="search-filter">
+                    <option value="all">All</option>
+                    <option value="title>Title</option>
+                    <option value="author">Author</option>
+                    <option value="categories">Categories</option>
+                    <option value="ranking">Ranking</option>
+                </select>
+            </div>
+            <div class="search-results"></div>
+        `;
+        thisApp.searchContainer.innerHTML = thisApp.searchHTML;
+
+        const searchPage = document.querySelector('#search');
+        searchPage.appendChild(thisApp.searchContainer);
+
+        const searchService = new SearchService(dataService);
+
+        thisApp.currentSongsList = new SongsList(dataService);
+        const resultsContainer = thisApp.searchContainer.querySelector('.search-results');
+        resultsContainer.appendChild(thisApp.currentSongsList.container);
+
+        const searchInput = thisApp.searchContainer.querySelector('#search-input');
+        const searchFilter = thisApp.searchContainer.querySelector('#search-filter');
+
+        function performSearch() {
+            const query = searchInput.value;
+            const filterBy = searchFilter.value;
+            const filteredSongs = searchService.searchSongs(query, filterBy);
+
+            thisApp.currentSongsList.initList(filteredSongs);
+
+            const resultsCount = document.querySelector('.results-count');
+            if(resultsCount) {
+                resultsCount.remove();
+            }
+
+            const countDiv = document.createElement('div');
+            countDiv.classList.add('results-count');
+            countDiv.textContent = `Found ${filteredSongs.length} songs(s)`;
+            resultsContainer.insertBefore(countDiv, thisApp.currentSongsList.container);
+        }
+
+        searchInput.addEventListener('input', performSearch);
+        searchFilter.addEventListener('change', performSearch);
+
+        const clearButton = document.createElement('button');
+        clearButton.textContent = 'Clear';
+        clearButton.classList.add('clear-search-btn');
+        clearButton.addEventListener('click', function() {
+            searchInput.value = '';
+            searchFilter.value = 'all';
+            performSearch();
+        });
+
+        thisApp.searchContainer.querySelector('.search-controls').appendChild(clearButton);
     },
 
     init: function() {
@@ -171,7 +301,6 @@ const app = {
         // console.log('templates:', templates);
       
         thisApp.initPages();
-        thisApp.initHome(); 
         //thisApp.initPlayer(); 
         thisApp.currentSongsList = new SongsList(dataService);
     },

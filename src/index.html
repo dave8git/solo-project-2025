@@ -1,55 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Festival Player</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,300i,700%7COswald:300,500,700&amp;subset=latin-ext"
-      rel="stylesheet">
-    <link href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flickity/2.3.0/flickity.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flickity/2.3.0/flickity.pkgd.min.js"></script>
-    <link rel="stylesheet" href="libs/green-audio-player/css/green-audio-player.min.css">
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Festival Player</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,300i,700%7COswald:300,500,700&amp;subset=latin-ext"
+    rel="stylesheet">
+  <link href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flickity/2.3.0/flickity.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flickity/2.3.0/flickity.pkgd.min.js"></script>
+  <link rel="stylesheet" href="libs/green-audio-player/css/green-audio-player.min.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
-    <!-- ostylować nawigację i zrobić handlebars - 1. schować sekcje, home ma być aktywna od razu, 2. zrobić handlebars -->
-    <header class="header">
-      <div class="container">
-        <div class="main-nav">
-          <a href="#home">Home</a>
-          <a href="#search">Search</a>
-          <a href="#discover">Discover</a>
-        </div>
+  <!-- ostylować nawigację i zrobić handlebars - 1. schować sekcje, home ma być aktywna od razu, 2. zrobić handlebars -->
+  <header class="header">
+    <div class="container">
+      <div class="main-nav">
+        <a href="#home">Home</a>
+        <a href="#search">Search</a>
+        <a href="#discover">Discover</a>
       </div>
-    </header>
-    <div id="pages">
-      <section id="home">
-        <div class="home-wrapper">
-          <div class="players">
-            <div class="player">
-              <audio>
-                <source src="songs/At_The_Top_David_Renda.mp3" type="audio/mpeg">
-              </audio>
-            </div>
-          </div>
-          home
-        </div>
-      </section>
-      <section id="search">
-        <div class="search-wrapper container"></div>
-      </section>
-      <section id="discover">
-        <div class="discover-wrapper container">discover</div>
-      </section>
     </div>
+  </header>
+  <div id="pages">
+    <section id="home">
+      <div class="home-wrapper">
+        <div class="players">
+          <div class="player">
+            <audio>
+              <source src="songs/At_The_Top_David_Renda.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </div>
+        home
+      </div>
+    </section>
+    <section id="search">
+    </section>
+    <section id="discover">
+      <div class="discover-wrapper container">discover</div>
+    </section>
+  </div>
 
-    <!-- dodać template'y stron -->
-    <script id="template-home" type="text/x-handlebars-template"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.0/handlebars.min.js"></script> -->
-    <script src="libs/green-audio-player/js/green-audio-player.min.js"></script>
-    <script src="js/app.js" type="module"></script>
-  </body>
+  <!-- dodać template'y stron -->
+  <script id="template-home" type="text/x-handlebars-template"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.0/handlebars.min.js"></script> -->
+  <script src="libs/green-audio-player/js/green-audio-player.min.js"></script>
+  <script src="js/app.js" type="module"></script>
+</body>
+
 </html>
